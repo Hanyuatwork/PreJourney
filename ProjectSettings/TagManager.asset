@@ -8,6 +8,7 @@ TagManager:
   - map2
   - map0
   - door
+  - bathroom
   layers:
   - Default
   - TransparentFX

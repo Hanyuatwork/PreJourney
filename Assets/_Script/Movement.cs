@@ -9,21 +9,34 @@ public class Movement : MonoBehaviour {
 	//public GameObject ball;
 	private Vector2 initial_position;
 	private Vector2 direction;
+	private string bathroomCollision = "";
+	private string tts = "";
 	public AudioSource footaudio;
 	public AudioSource collisonaudio;
 	public AudioSource dooraudio;
 	public AudioSource speechaudio;
+	public bool moving;
+	private static Movement instance;
+	public static Movement Instance{
+		get{ 
+			if (instance == null) {
+				instance = GameObject.FindObjectOfType<Movement> ();
+			}
+			return instance;
+		}
+	}
+
 	void Start () {
 		footaudio.Play ();
 		footaudio.mute = true;
 		//collisonaudio.mute = true;
+		EasyTTSUtil.Initialize (EasyTTSUtil.UnitedStates);
 	}
 
-
-
-
-
-
+	void OnApplicationQuit() 
+	{
+		EasyTTSUtil.Stop ();
+	}
 
 
 	void FixedUpdate () {
@@ -35,6 +48,7 @@ public class Movement : MonoBehaviour {
 		
 		}
 		if (Input.touchCount > 0) {
+			moving = true;
 			Touch finger = Input.GetTouch (0);
 
 			//Debug.Log (initial_position);
@@ -131,6 +145,7 @@ public class Movement : MonoBehaviour {
 				break;
 			case TouchPhase.Ended:
 				footaudio.mute = true;
+				moving = false;
 				break;
 			}
 		
@@ -170,5 +185,42 @@ public class Movement : MonoBehaviour {
 			dooraudio.Play ();
 		}
 	}
+
+	void OnTriggerPass2D(Collider2D other){
+		if (other.gameObject.tag == "bathroom") {
+			tts = "The women's bathrrom is on your left";
+			EasyTTSUtil.SpeechAdd(tts);
+		}
+//		if (other.gameObject.tag == "bathroom") {
+//			string bathroom = "";
+//			string direction = "";
+//			if (bathroomCollision == "") {
+//				bathroomCollision = other.gameObject.name;
+//			} else {
+//				if (other.gameObject.name == "wBathroomRight" && bathroomCollision == "wBathroomLeft") {
+//					bathroom = "women's bathroom";
+//					direction = "left";
+//				}
+//				if (other.gameObject.name == "wBathroomRight" && bathroomCollision == "wBathroomRight") {
+//					bathroom = "women's bathroom";
+//					direction = "right";
+//				}
+//				if (other.gameObject.name == "mBathroomRight" && bathroomCollision == "mBathroomLeft") {
+//					bathroom = "men's bathroom";
+//					direction = "left";
+//				}
+//				if (other.gameObject.name == "mBathroomRight" && bathroomCollision == "mBathroomRight") {
+//					bathroom = "men's bathroom";
+//					direction = "right";
+//				}
+//				tts = $"The {bathroom} is on your {direction}";
+//				EasyTTSUtil.SpeechAdd(tts);
+//				bathroomCollision = "";
+//			}
+//		}
+	}
+
+
+
 
 }
