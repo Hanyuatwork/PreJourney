@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine.iOS;
 using System.Text.RegularExpressions;
+using KKSpeech;
 
 public class Movement : MonoBehaviour {
 	//public GameObject ball;
@@ -15,6 +17,7 @@ public class Movement : MonoBehaviour {
 	public AudioSource collisonaudio;
 	public AudioSource dooraudio;
 	public AudioSource speechaudio;
+	public string resultText;
 	public bool moving;
 	private static Movement instance;
 	public static Movement Instance{
@@ -30,7 +33,22 @@ public class Movement : MonoBehaviour {
 		footaudio.Play ();
 		footaudio.mute = true;
 		//collisonaudio.mute = true;
+
+		///////
 		EasyTTSUtil.Initialize (EasyTTSUtil.UnitedStates);
+
+		//Initialize Speech Recognition
+		if (SpeechRecognizer.ExistsOnDevice()) {
+			SpeechRecognizerListener listener = GameObject.FindObjectOfType<SpeechRecognizerListener>();
+			listener.onFinalResults.AddListener(OnFinalResult);
+			listener.onPartialResults.AddListener(OnPartialResult);
+			SpeechRecognizer.RequestAccess();
+
+		} else {
+			resultText = "Sorry, but this device doesn't support speech recognition. Please check permissions.";
+			EasyTTSUtil.SpeechAdd (resultText);
+		}
+
 	}
 
 	void OnApplicationQuit() 
@@ -183,6 +201,28 @@ public class Movement : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other){
 		if (other.gameObject.tag == "door") {
 			dooraudio.Play ();
+			EasyTTSUtil.SpeechAdd ("this is door.");
+
+			SpeechRecognizerListener listener = GameObject.FindObjectOfType<SpeechRecognizerListener>();
+			listener.onFinalResults.AddListener(OnFinalResult);
+			listener.onPartialResults.AddListener(OnPartialResult);
+			SpeechRecognizer.RequestAccess();
+
+			EasyTTSUtil.SpeechAdd ("passed request");
+
+			if (SpeechRecognizer.IsRecording()) {
+				EasyTTSUtil.SpeechAdd("Stoping recording");
+				SpeechRecognizer.StopIfRecording();
+			} else {
+				SpeechRecognizer.StartRecording(true);
+				EasyTTSUtil.SpeechAdd("Start recording");	
+			}
+
+
+			EasyTTSUtil.SpeechAdd (resultText);
+
+			EasyTTSUtil.SpeechAdd ("and finihsed testing");
+
 		}
 	}
 
@@ -219,6 +259,18 @@ public class Movement : MonoBehaviour {
 //			}
 //		}
 	}
+
+
+	/////Functions for speech recognition
+	public void OnFinalResult(string result) {
+		resultText = result;
+	}
+
+	public void OnPartialResult(string result) {
+		resultText = result;
+	}
+
+
 
 
 

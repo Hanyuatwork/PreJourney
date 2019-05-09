@@ -12,6 +12,9 @@
 		public Transform DoorParent;
 		public Transform PosParent;
 		Vector3 Destination;
+
+		public float timer=0;
+		
 		void Start () {
 
 			foreach (Transform child in DoorParent) {
@@ -70,7 +73,7 @@
 		}
 
 		private void drawLine(){
-		Debug.Log ("checher 1");
+		//Debug.Log ("checher 1");
 
 			Vector3 P_ball = ball.GetComponent<Transform> ().position;
 			float min_distant = Vector3.Distance(Poss[0].position,P_ball);
@@ -94,7 +97,7 @@
 			if (!inPathway()) {
 				Points.Add (closestDoor ());
 			}
-		Debug.Log ("checher 2");
+		//Debug.Log ("checher 2");
 
 		if (ClosestPos != Destination_ClosestPos) {
 			float D_clockwise = 0;
@@ -159,13 +162,13 @@
 
 			}
 		}
-		Debug.Log ("checher 4");
+		//Debug.Log ("checher 4");
 			
 			if (ClosestPos == Destination_ClosestPos) {
 				Points = new List<Vector3> ();
 				Points.Add (P_ball);
 			}
-		Debug.Log ("checher 5");
+		//Debug.Log ("checher 5");
 			
 			Points.Add (Destination);
 			Line.positionCount = Points.Count;
