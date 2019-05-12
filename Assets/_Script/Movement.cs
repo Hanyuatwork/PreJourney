@@ -29,13 +29,15 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
+	public int faceto = 0;  
+
 	void Start () {
 		footaudio.Play ();
 		footaudio.mute = true;
 		//collisonaudio.mute = true;
 
 		///////
-		EasyTTSUtil.Initialize (EasyTTSUtil.UnitedStates);
+		//EasyTTSUtil.Initialize (EasyTTSUtil.UnitedStates);
 
 		//Initialize Speech Recognition
 		if (SpeechRecognizer.ExistsOnDevice()) {

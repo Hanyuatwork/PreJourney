@@ -54,6 +54,7 @@
      <Compile Include="Assets\_Script\camera_follow.cs" />
      <Compile Include="Assets\_Script\maps.cs" />
      <Compile Include="Assets\_Script\Movement.cs" />
+     <Compile Include="Assets\auto_start.cs" />
      <Compile Include="Assets\ChangeScence.cs" />
      <Compile Include="Assets\EasyTTS\EasyTTSUtil.cs" />
      <Compile Include="Assets\KKSpeechRecognizer\Example\RecordingCanvas.cs" />

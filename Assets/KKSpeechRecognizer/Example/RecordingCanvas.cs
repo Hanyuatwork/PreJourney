@@ -8,6 +8,17 @@ public class RecordingCanvas : MonoBehaviour {
 
 	public Button startRecordingButton;
 	public Text resultText;
+	private static RecordingCanvas instance;
+	public static RecordingCanvas Instance{
+		get{ 
+			if (instance == null) {
+				instance = GameObject.FindObjectOfType<RecordingCanvas> ();
+			}
+			return instance;
+		}
+	}
+
+
 	void Start() {
 		if (SpeechRecognizer.ExistsOnDevice()) {
 			SpeechRecognizerListener listener = GameObject.FindObjectOfType<SpeechRecognizerListener>();

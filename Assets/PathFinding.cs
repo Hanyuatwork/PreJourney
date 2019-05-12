@@ -1,6 +1,7 @@
 ﻿	using System.Collections;
 	using System.Collections.Generic;
 	using UnityEngine;
+	using System;
 
 	public class PathFinding : MonoBehaviour {
 		
@@ -13,8 +14,9 @@
 		public Transform PosParent;
 		Vector3 Destination;
 
-		public float timer=0;
-		
+		public int counter=0;
+		public bool speak = false;
+		public int trig=-1;
 		void Start () {
 
 			foreach (Transform child in DoorParent) {
@@ -23,7 +25,7 @@
 			foreach (Transform child in PosParent) {
 				Poss.Add (child);
 			}
-			int rand = (int)Random.Range (0, Doors.Count);
+			int rand = (int)UnityEngine.Random.Range (0, Doors.Count);
 			//Destination = Doors [rand].position;
 			Destination = Doors [4].position;
 
@@ -45,6 +47,14 @@
 
 		void Update () {
 				drawLine ();
+		if (counter != Poss.Count) {
+			counter = Poss.Count;
+			speak = true;
+		}
+		if (speak) {
+			
+		}
+
 		}
 
 		private bool inPathway(){
@@ -133,6 +143,8 @@
 			}
 
 			if (D_clockwise > D_counter_clockwise) {
+				
+
 				if (ClosestPos < Destination_ClosestPos) {
 					for (int i = ClosestPos; i <= Destination_ClosestPos; ++i) {
 						Points.Add (Poss [i].position);
@@ -146,6 +158,7 @@
 					}
 				} 
 			} else {
+						
 				if (ClosestPos < Destination_ClosestPos) {
 					for (int i = ClosestPos; i >= 0; --i) {
 						Points.Add (Poss [i].position);
@@ -161,9 +174,18 @@
 				} 
 
 			}
+			if((Points[2].y>P_ball.y  && P_ball.y > Points[1].y) || (Points[2].y<P_ball.y  && P_ball.y < Points[1].y)
+				||(Points[2].x>P_ball.x  && P_ball.x > Points[1].x) || (Points[2].x<P_ball.x  && P_ball.x < Points[1].x)){
+				Points.RemoveAt(1);
+			} 
 		}
 		//Debug.Log ("checher 4");
 			
+
+
+
+
+
 			if (ClosestPos == Destination_ClosestPos) {
 				Points = new List<Vector3> ();
 				Points.Add (P_ball);
@@ -171,6 +193,8 @@
 		//Debug.Log ("checher 5");
 			
 			Points.Add (Destination);
+
+
 			Line.positionCount = Points.Count;
 			for (int i = 0; i < Line.positionCount; ++i) {
 				Line.SetPosition (i, Points [i]);
@@ -178,8 +202,30 @@
 
 			Line.startWidth = 0.05f;
 			Line.endWidth = 0.05f;
-		}
 
+		if (trig != ClosestPos) {
+			trig = ClosestPos;
+			if (Math.Abs (Points [1].y - P_ball.y) > Math.Abs (Points [1].x - P_ball.x)) {
+				if (Points [1].y > P_ball.y) {
+					EasyTTSUtil.SpeechAdd ("Go up.");
+					Debug.Log ("Go up.");
+				} else {
+					EasyTTSUtil.SpeechAdd ("Go down.");
+					Debug.Log ("Go down.");
+				}
+			} else {
+				if (Points [1].x > P_ball.x) {
+					EasyTTSUtil.SpeechAdd ("Go right.");
+					Debug.Log ("Go right.");
+				} else {
+					EasyTTSUtil.SpeechAdd ("Go left.");
+					Debug.Log ("Go left.");
+				}
+			}
+		
+
+		}
+	}
 
 
 	}
